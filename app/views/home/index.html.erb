@@ -1,19 +1,42 @@
+<!-- USER selection dropdown. -->
 <div style="display:flex; justify-content:left; align-items: center;">
     <%= form_tag do %>
+        <label>User: </label>
         <%= select_tag "user", options_from_collection_for_select(User.all, "id", "full_name", @user_id),:prompt => "Select User", onchange: "this.form.submit();", style: 'width: 10rem' %> 
     <% end %>
 </div>
 
+<!-- Only render if USER has been selected. -->
 <% if @user_id %>
-    <br>
+    
+    <!-- Form for creating Account Transactions -->
+    <br><hr style="border: 1px solid #bbb;">
+    <div style="display:flex; justify-content: center">
+        <h3>Create Account Transaction</h3>
+    </div>
+    <div style="display: flex; justify-content: center;">
+        <%= form_with url: "/create_transaction", method: :post do |form| %>
+            <%= form.hidden_field :user, value: @user_id %>
+            <%= form.label :date, "Date:" %>
+            <%= form.date_field :date, :value => Time.now.strftime('%Y-%m-%d') %>
+            <%= form.label :amount, "Amount:" %>
+            <%= form.number_field :amount, step: :any %>
+            <%= form.label :type, "Account type:" %>
+            <%= form.select :type, ["Credit", "Debit"] %>
+            <%= form.submit "Create Account Transaction" %>
+        <% end %>
+    </div>
+    <br><hr style="border: 1px solid #bbb;"><br>
+
+    <!-- Account Transactions Tables -- One table for each type (CREDIT/DEBIT) -->
     <% @hashed_info['data']['user'].first['accounts'].each do |account| %>
         <table>
             <th><span style="font-weight: 400">Account Type:</span> <%= account['accountType'].capitalize %></th>
-            <th style="text-align: center"><span style="font-weight: 400">Balance:</span> $<%= account['accountTransactions'].map{|at| at['amount']}.sum %></th>
+            <th style="text-align: center"><span style="font-weight: 400">Balance:</span> $<%= account['accountTransactions'].map{|at| at['amount']}.sum.round(2) %></th>
         </table>
         <table>
-                <th>Date</th>
-                <th style="width: 20%">Amount</th>
+            <th>Date</th>
+            <th style="width: 20%">Amount</th>
             <% account['accountTransactions'].each do |transaction| %>
                 <tr>
                     <td><%= transaction['date'].to_date.strftime("%B %-d, %Y")     %></td>
@@ -23,29 +46,6 @@
         </table>
         <br>
     <% end %>
-<% else %>
+<% else %> <!-- Show tooltip if no USER has been selected. -->
     <div style="display:flex; justify-content: center"><h3>Please select a user from the dropdown above.</h3></div>
 <% end %>
-
-
-
-
-<style>
-    body {
-        font-family: arial, sans-serif;
-    }
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    td, th {
-        border: 1px solid #a8a7a7;
-        text-align: left;
-        padding: 8px;
-    }
-
-    tr:nth-child(even) {
-        background-color: #dddddd;
-    }
-</style>

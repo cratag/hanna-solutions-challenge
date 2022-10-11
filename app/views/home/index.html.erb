@@ -23,8 +23,8 @@
             <%= form.hidden_field :user, value: @user_id %>
             <%= form.label :date, "Date:" %>
             <%= form.date_field :date, :value => Time.now.strftime('%Y-%m-%d') %>
-            <%= form.label :amount, "Amount:" %>
-            <%= form.number_field :amount, step: :any %>
+            <%= form.label :amount, "Amount: $" %>
+            <%= form.number_field :amount, step: :any, style: 'width: 8%' %>
             <%= form.label :type, "Account type:" %>
             <%= form.select :type, ["Credit", "Debit"] %>
             <%= form.submit "Create Account Transaction" %>

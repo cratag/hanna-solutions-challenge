@@ -48,10 +48,10 @@ gem "bootsnap", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
-# Using GraphQL
+# Using GraphQL API
 gem 'graphql', '~> 2.0', '>= 2.0.14'
 
-# Pry gem
+# Pry gem -- Interactive debugging console.
 gem 'pry', '~> 0.14.1'
 
 group :development, :test do

@@ -1,0 +1,51 @@
+<div style="display:flex; justify-content:left; align-items: center;">
+    <%= form_tag do %>
+        <%= select_tag "user", options_from_collection_for_select(User.all, "id", "full_name", @user_id),:prompt => "Select User", onchange: "this.form.submit();", style: 'width: 10rem' %> 
+    <% end %>
+</div>
+
+<% if @user_id %>
+    <br>
+    <% @hashed_info['data']['user'].first['accounts'].each do |account| %>
+        <table>
+            <th><span style="font-weight: 400">Account Type:</span> <%= account['accountType'].capitalize %></th>
+            <th style="text-align: center"><span style="font-weight: 400">Balance:</span> $<%= account['accountTransactions'].map{|at| at['amount']}.sum %></th>
+        </table>
+        <table>
+                <th>Date</th>
+                <th style="width: 20%">Amount</th>
+            <% account['accountTransactions'].each do |transaction| %>
+                <tr>
+                    <td><%= transaction['date'].to_date.strftime("%B %-d, %Y")     %></td>
+                    <td>$<%= transaction['amount'] %></td>
+                </tr>
+            <% end %>
+        </table>
+        <br>
+    <% end %>
+<% else %>
+    <div style="display:flex; justify-content: center"><h3>Please select a user from the dropdown above.</h3></div>
+<% end %>
+
+
+
+
+<style>
+    body {
+        font-family: arial, sans-serif;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #a8a7a7;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>

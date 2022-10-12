@@ -1,4 +1,6 @@
 class HomeController < ApplicationController
+  protect_from_forgery with: :null_session # Remove CSRF warning.
+
   def index
     @user_id = params['user'].present? ? params['user'] : nil # Get USER ID or become Nil if no user selected.
     @user = @user_id.nil? ? nil : User.find(params['user'])  # Find USER unless USER ID is nil.
